@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mail, Github, Linkedin, ExternalLink, Zap, Brain, Code, Wallet, Send, Heart } from 'lucide-react';
+import { Mail, Github, Linkedin, ExternalLink, Zap, Code, Wallet, Send, Heart } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Home() {
@@ -20,14 +19,15 @@ export default function Home() {
 
   // Brave Wallet Tip ফাংশন
   const handleBraveTip = async () => {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
+    if (typeof window !== 'undefined' && 'ethereum' in window) {
       try {
-        const accounts = await (window as any).ethereum.request({
+        const ethereum = window.ethereum as { request: (args: { method: string }) => Promise<string[]> };
+        await ethereum.request({
           method: 'eth_requestAccounts',
         });
         alert(`ধন্যবাদ! আপনার টিপ ${tipAmount} BAT পাঠানো হয়েছে।`);
         setShowTipModal(false);
-      } catch (error) {
+      } catch {
         alert('Brave Wallet সংযোগ ব্যর্থ হয়েছে।');
       }
     }
